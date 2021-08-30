@@ -6,10 +6,9 @@ import { useState } from 'react'
 const Login = ({setOuterPageNum, outerPageNum, loginState, className }) => {
     const [redirectPage, setRedirectPage] = useState(null);
 
-
     async function sendLoginInfo(e) {
         e.preventDefault()
-        const inputs = e.target.querySelectorAll('.input'), values ={};
+        const inputs = e.target.querySelectorAll('.input'), values = {};
         
         for(const input of inputs) {
             values[input.name] = input.value
@@ -30,11 +29,9 @@ const Login = ({setOuterPageNum, outerPageNum, loginState, className }) => {
 
         if(splitURL[splitURL.length -1] === 'login'){
             alert('Wrong username or password.')
-        }else {
+        } else {
             setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
             setOuterPageNum(outerPageNum + 1)
-            // setOuterPageNum(outerPageNum - 1)
-            console.log(`"/${splitURL[splitURL.length - 1]}"`);
             loginState(true)
         }
     }

@@ -2,9 +2,7 @@ import React from 'react';
 import SResidents from "./Residents.jsx";
 import styled from "styled-components";
 import { useState } from 'react';
-import SSuccess from './success';
-
-let currentResidents = null;
+import SSuccess from './Success';
 
 const Planets = ({ data, loginState, className }) => {
     const [seen, setSeenState] = useState(false)
@@ -31,7 +29,6 @@ const Planets = ({ data, loginState, className }) => {
         })
         .then(response => response.json())
         .then(function (data) {residentsData = data})
-        // console.log(residentsData);
 
         setCurrentResidents(residentsData.people)
         console.log("residentsInput: ", residentsData.people)
@@ -45,15 +42,7 @@ const Planets = ({ data, loginState, className }) => {
         })
         .then(response => response.text())
         .then((data) => {setVoted(data)})
-        // console.log(voted)
-        // if(voted) {
-        //     console.log("ifvoted")
-        // } else {
-        //     console.log("voted is false, bibibiiii")
-        // }
     }
-
-    // useEffect(()=>{}, [voted])
 
     const headers = ["Name", "Diameter", "Climate", "Terrain", "Surface Water Percentage", "Population", "Residents", ""];
 

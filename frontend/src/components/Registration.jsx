@@ -2,16 +2,15 @@ import React from 'react';
 import styled from "styled-components";
 import  { Redirect } from 'react-router-dom'
 import { useState } from 'react';
-import SSuccess from './success';
+import SSuccess from './Success';
 
 const Registration = ({ className }) => {
     const [redirectPage, setRedirectPage] = useState(null)
     const [isSuccess, setIsSuccess] = useState(false)
 
-
     async function sendRegistration(e) {
         e.preventDefault()
-        const inputs = e.target.querySelectorAll('.input'), values ={};
+        const inputs = e.target.querySelectorAll('.input'), values = {};
         
         for(const input of inputs) {
             values[input.name] = input.value
@@ -21,44 +20,39 @@ const Registration = ({ className }) => {
 
         await fetch('http://localhost:3000/registration', {
             method: 'POST',
-            // redirect: 'follow',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         })
-        .then(response => response.url).then((data) => {redirectURL = data}) //.then(data => console.log(data))
+        .then(response => response.url).then((data) => {redirectURL = data})
 
         const splitURL = redirectURL.split('/');
 
         if(splitURL[splitURL.length -1] === 'registration'){
             alert('Username already exists, please choose another one!')
-        }else {
+        } else {
 
            setTimeout(() => {
                setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
             }, 3000);
-            
 
             setIsSuccess(true)
-           // alert('This will redirect after 1 second!')
         }
     }
 
-
-
     return (
         <div className={className}>
-
-            {isSuccess ? <SSuccess message="Successful registration. Log in to continue."></SSuccess> : 
-                        <form onSubmit={sendRegistration}>
-                        <input className="input" type="text" placeholder="username" name="name" required />
-                        <input className="input" type="email" placeholder="email" name="email" required />
-                        <input className="input" type="password" placeholder="password" name="password" required />
-                        <button className="submit" type="submit" >Register</button>
-                    </form>
+            {isSuccess ? 
+            <SSuccess message="Successful registration. Log in to continue."></SSuccess> 
+            : 
+            <form onSubmit={sendRegistration}>
+                <input className="input" type="text" placeholder="username" name="name" required />
+                <input className="input" type="email" placeholder="email" name="email" required />
+                <input className="input" type="password" placeholder="password" name="password" required />
+                <button className="submit" type="submit" >Register</button>
+            </form> 
             }
-
             {redirectPage ? <Redirect to={redirectPage} />: null}
         </div>
     )

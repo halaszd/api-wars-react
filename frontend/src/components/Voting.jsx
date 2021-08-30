@@ -8,23 +8,23 @@ const Voting = ({ data, setOuterSeen, className }) => {
 
     const headers = ["Planet", "Votes"]
 
-    console.log("data from voting", data)
-
     return (
         <div className={className}>
             <div className="modal_content">
                 <h3>Voting Statistics</h3>
+
                 <div className="resData">
                     {headers.map((headerText, index) => <span key={index}>{headerText}</span>)}
                 </div>
-                 {Object.keys(data).map((key, index) => (
-                    <div className="resData" key={index}>
-                        <span >{key}</span>  
-                        <span >{data[key]}</span>
-                    </div>
-                    ))
-                } 
-                <i id="closeBtn" onClick={handleClose} className="fas fa-times"></i>
+                
+            {Object.keys(data).map((key, index) => (
+                <div className="resData" key={index}>
+                    <span >{key}</span>  
+                    <span >{data[key]}</span>
+                </div>
+                ))
+            } 
+            <i id="closeBtn" onClick={handleClose} className="fas fa-times"></i>
             </div>
             
         </div>

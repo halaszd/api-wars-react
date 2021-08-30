@@ -16,7 +16,6 @@ const port = 3000;
 const axios = require('axios');
 
 const initPassport = require('./passport-config');
-const { send } = require('process');
 
 initPassport(
 	passport,
@@ -41,11 +40,10 @@ if(fileExistsSync('users.json')){
             console.log(err)
         } else {
             users = JSON.parse(data);
-           // console.log("users from file thingy 44", users)
         }    
 })} else {
         const jsonToWrite = JSON.stringify(users)
-        fs.writeFile('users.json', jsonToWrite, 'utf8', () => console.log("hello"))
+        fs.writeFile('users.json', jsonToWrite, 'utf8', () => {})
     }
 
 app.use(express.urlencoded({ extended: false }))
@@ -70,7 +68,6 @@ app.get("/", (req, res) => {
 })
 
 app.get("/is-auth", (req, res) => {
-    //console.log(req.user.name)
     const infos = {};
     if(req.isAuthenticated()) {
         infos["name"] = req.user.name;
@@ -82,7 +79,7 @@ app.get("/is-auth", (req, res) => {
 
     res.send(JSON.stringify(infos))
 })
-// -------
+
 app.get("/login", checkNotAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
 
@@ -103,13 +100,11 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 
 app.use(express.json())
 app.post('/registration', checkNotAuthenticated, async (req, res) => {
-    console.log("105", req.body)
 	try {
         console.log("users in reg try", users)
 		const hashedPassword = await bcrypt.hash(req.body.password, 10)
         isRegistered = false;
         for(user of users["users"]) {
-            console.log(req.body.name, user)
             if(user.name === req.body.name){
                 isRegistered = true;
             }
@@ -126,7 +121,6 @@ app.post('/registration', checkNotAuthenticated, async (req, res) => {
                         email: req.body.email,
                         password: hashedPassword
                     })
-                    console.log("Redeclaring users: ", users)
                     const jsonToWrite = JSON.stringify(users)
                     fs.writeFile('users.json', jsonToWrite, 'utf8', () => console.log("hello"))
                 }
@@ -139,7 +133,6 @@ app.post('/registration', checkNotAuthenticated, async (req, res) => {
         console.log("this is in reg catch", error)
 		res.redirect('/registration')
 	}
-	console.log("from registration: ", users)
 })
 
 app.delete('/logout', (req, res) => {
@@ -148,8 +141,6 @@ app.delete('/logout', (req, res) => {
 })
 
 app.get("/planets", async (req, res) => {
-    console.log(req.query)
-
     if(req.query.page){
         console.log(typeof req.query.page)
         if(parseInt(req.query.page) < 1) {
@@ -164,7 +155,6 @@ app.get("/planets", async (req, res) => {
 
 app.use(express.json())
 app.post("/people", async (req, res) => {
-    console.log(req.body);
     let people = {"people": []};
         for(residentLink of req.body.residents){
             await axios.get(residentLink).then(function (response) {
@@ -188,14 +178,10 @@ if(fileExistsSync('votes.json')){
     })} else {
     console.log("188", JSON.stringify(votes))
         const jsonToWrite = JSON.stringify(votes)
-        fs.writeFile('votes.json', jsonToWrite, 'utf8', () => console.log("hello"))
+        fs.writeFile('votes.json', jsonToWrite, 'utf8', () => {})
     }
 
 app.post("/vote", (req, res)=> {
-
-    console.log("trying")
-    
-
     let Pname = req.body.planetName
 
     try {
@@ -206,17 +192,14 @@ app.post("/vote", (req, res)=> {
                 votes = JSON.parse(data);
 
                 if (votes[Pname]) {
-                    console.log("log pname in if",Pname)
                     votes[Pname] += 1
                 } else {
-                    console.log("log pname ",Pname)
                     votes[Pname] = 1;    
                 }
 
                 const jsonToWrite = JSON.stringify(votes)
                 fs.writeFile('votes.json', jsonToWrite, 'utf8', () => console.log("hello"))
                 res.send("You have successfully voted on " +req.body.planetName)
-
             }
         })
     } catch (err) {

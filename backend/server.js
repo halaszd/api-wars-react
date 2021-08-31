@@ -59,11 +59,21 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(methodOverride('_method'))
+app.use(express.json())
 
 // Starting requests
 app.use("/static", express.static(path.join("../", "frontend", "build", "static")));
 
 app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
+})
+
+app.get("/login", checkNotAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
+
+})
+
+app.get("/registration", checkNotAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
 })
 
@@ -80,28 +90,15 @@ app.get("/is-auth", (req, res) => {
     res.send(JSON.stringify(infos))
 })
 
-app.get("/login", checkNotAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
-
-})
-
-app.get("/registration", checkNotAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, "./../frontend/build/index.html"));
-})
-
-app.use(express.json())
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-    successMessage:'hello',
 	successRedirect: '/',
 	failureRedirect: '/login',
 	failureFlash: true
 	})
 )
 
-app.use(express.json())
 app.post('/registration', checkNotAuthenticated, async (req, res) => {
 	try {
-        console.log("users in reg try", users)
 		const hashedPassword = await bcrypt.hash(req.body.password, 10)
         isRegistered = false;
         for(user of users["users"]) {
@@ -110,9 +107,9 @@ app.post('/registration', checkNotAuthenticated, async (req, res) => {
             }
         }
         if(!isRegistered){
-            fs.readFile('users.json', 'utf8', function readFileCallback(err, data) {
-                if (err) {
-                    console.log(err)
+            fs.readFile('users.json', 'utf8', function readFileCallback(error, data) {
+                if (error) {
+                    console.log(error)
                 } else {
                     users = JSON.parse(data);
                     users["users"].push({
@@ -122,7 +119,7 @@ app.post('/registration', checkNotAuthenticated, async (req, res) => {
                         password: hashedPassword
                     })
                     const jsonToWrite = JSON.stringify(users)
-                    fs.writeFile('users.json', jsonToWrite, 'utf8', () => console.log("hello"))
+                    fs.writeFile('users.json', jsonToWrite, 'utf8', () => {})
                 }
             })
             res.redirect('/login')
@@ -130,7 +127,7 @@ app.post('/registration', checkNotAuthenticated, async (req, res) => {
             res.redirect('/registration')
         }
 	} catch (error){
-        console.log("this is in reg catch", error)
+        console.log(error)
 		res.redirect('/registration')
 	}
 })
@@ -142,7 +139,6 @@ app.delete('/logout', (req, res) => {
 
 app.get("/planets", async (req, res) => {
     if(req.query.page){
-        console.log(typeof req.query.page)
         if(parseInt(req.query.page) < 1) {
             req.query.page = "1";
         }
@@ -153,7 +149,6 @@ app.get("/planets", async (req, res) => {
     }
 })
 
-app.use(express.json())
 app.post("/people", async (req, res) => {
     let people = {"people": []};
         for(residentLink of req.body.residents){

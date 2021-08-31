@@ -7,7 +7,6 @@ import SLogin from "./components/Login.jsx";
 import SRegistration from "./components/Registration.jsx";
 import loading from "./components/imperial_loading.gif";
 import SVoting from './components/Voting';
-// import planets from "./components/planets.json";
 import {
   BrowserRouter as Router,
   Switch,
@@ -72,7 +71,7 @@ export default function App() {
               }
               {pageNum >= 6 ? <i onClick={() => setPageNum(pageNum + 1)} className="fas fa-chevron-right disabled"></i>
               : <i onClick={() => setPageNum(pageNum + 1)} className="fas fa-chevron-right"></i>}
-              { planets.results ? <SPlanets data={planets.results} loginState={isLoggedIn} /> : <div className="loadingDiv"><img className="loadingGif" src={loading} alt="loading" /></div> }
+              { planets.results ? <SPlanets data={planets.results} outerIsLoggedIn={isLoggedIn} /> : <div className="loadingDiv"><img className="loadingGif" src={loading} alt="loading" /></div> }
               {seen ? <SVoting data={stats} setOuterSeen={setSeen}/> : null}
           </div>
         </Route>

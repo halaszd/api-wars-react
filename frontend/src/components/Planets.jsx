@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useState } from 'react';
 import SSuccess from './Success';
 
-const Planets = ({ data, loginState, className }) => {
+const Planets = ({ data, outerIsLoggedIn, className }) => {
     const [seen, setSeenState] = useState(false)
     const [currentResidents, setCurrentResidents] = useState(null)
     const [voted, setVoted] = useState(null)
@@ -54,14 +54,23 @@ const Planets = ({ data, loginState, className }) => {
             {data.map((planet, index) => {
                 return  <div key={index} className="container">
                             <p title="Name: ">{planet.name}</p>
-                            <p title="Diameter: ">{planet.diameter === "unknown" ? "unknown" : parseInt(planet.diameter).toLocaleString("en-US") + " km"}</p>
+                            <p title="Diameter: ">{planet.diameter === "unknown" 
+                                ? "unknown" 
+                                : parseInt(planet.diameter).toLocaleString("en-US") + " km"}</p>
                             <p title="Climate: ">{planet.climate}</p>
                             <p title="Terrain: ">{planet.terrain}</p>
-                            <p title="Surface Water: ">{planet.surface_water === "unknown" ? "unknown" : planet.surface_water + "%"}</p>
-                            <p title="Population: ">{planet.population === "unknown" ? "unknown" : parseInt(planet.population).toLocaleString("en-US") + " people"}</p>
-                            {planet.residents.length > 0 ? <button onClick={(e) => sendResidents(planet.residents)}>{planet.residents.length} Residents</button> : <p>No Known Residents</p>}
-                            {loginState ? <button onClick={() => sendVote(planet.name)} className="vote-btn">Vote</button>
-                            : <button disabled className="vote-btn tooltip">Vote<span className="tooltipText">Please log in to Vote!</span></button>}
+                            <p title="Surface Water: ">{planet.surface_water === "unknown" 
+                                ? "unknown" 
+                                : planet.surface_water + "%"}</p>
+                            <p title="Population: ">{planet.population === "unknown" 
+                                ? "unknown" 
+                                : parseInt(planet.population).toLocaleString("en-US") + " people"}</p>
+                            {planet.residents.length > 0 
+                                ? <button onClick={() => sendResidents(planet.residents)}>{planet.residents.length} Residents</button> 
+                                : <p>No Known Residents</p>}
+                            {outerIsLoggedIn 
+                                ? <button onClick={() => sendVote(planet.name)} className="vote-btn">Vote</button>
+                                : <button disabled className="vote-btn tooltip">Vote<span className="tooltipText">Please log in to Vote!</span></button>}
                         </div>
             })}
             {currentResidents && seen ? <SResidents data={currentResidents} toggle={togglePop}/> : null}

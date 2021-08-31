@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
      Fetch data from the given url. If it can't get any data from the url, than it writes a message into the console.
      *
      * @param initUrl string that gives the route that the function fetch data from.
-     */
+*/
 export const useFetch = (initUrl) => {
   const [url, setUrl] = useState(initUrl);
   const [data, setData] = useState(undefined);

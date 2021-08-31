@@ -8,7 +8,7 @@ const Registration = ({ className }) => {
     const [redirectPage, setRedirectPage] = useState(null)
     const [isSuccess, setIsSuccess] = useState(false)
 
-    async function sendRegistration(e) {
+    function sendRegistration(e) {
         e.preventDefault()
         const inputs = e.target.querySelectorAll('.input'), values = {};
         
@@ -16,29 +16,28 @@ const Registration = ({ className }) => {
             values[input.name] = input.value
         }
         
-        let redirectURL;
-
-        await fetch('http://localhost:3000/registration', {
+        fetch('http://localhost:3000/registration', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         })
-        .then(response => response.url).then((data) => {redirectURL = data})
+        .then(response => response.url)
+        .then((data) => {
+            const splitURL = data.split('/');
 
-        const splitURL = redirectURL.split('/');
+            if(splitURL[splitURL.length -1] === 'registration'){
+                alert('Username already exists, please choose another one!')
+            } else {
 
-        if(splitURL[splitURL.length -1] === 'registration'){
-            alert('Username already exists, please choose another one!')
-        } else {
+                setTimeout(() => {
+                    setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
+                    }, 3000);
 
-           setTimeout(() => {
-               setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
-            }, 3000);
-
-            setIsSuccess(true)
-        }
+                setIsSuccess(true)
+            }
+        })
     }
 
     return (

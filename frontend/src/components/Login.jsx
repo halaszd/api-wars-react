@@ -6,7 +6,7 @@ import { useState } from 'react'
 const Login = ({setOuterPageNum, outerPageNum, loginState, className }) => {
     const [redirectPage, setRedirectPage] = useState(null);
 
-    async function sendLoginInfo(e) {
+    function sendLoginInfo(e) {
         e.preventDefault()
         const inputs = e.target.querySelectorAll('.input'), values = {};
         
@@ -14,26 +14,24 @@ const Login = ({setOuterPageNum, outerPageNum, loginState, className }) => {
             values[input.name] = input.value
         }
 
-        let redirectURL;
-
-        await fetch('http://localhost:3000/login', {
+        fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(values)
         })
-        .then(response => response.url).then((data) => {redirectURL = data})
+        .then(response => response.url).then((data) => {
+            const splitURL = data.split('/');
 
-        const splitURL = redirectURL.split('/');
-
-        if(splitURL[splitURL.length -1] === 'login'){
-            alert('Wrong username or password.')
-        } else {
-            setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
-            setOuterPageNum(outerPageNum + 1)
-            loginState(true)
-        }
+            if(splitURL[splitURL.length -1] === 'login'){
+                alert('Wrong username or password.')
+            } else {
+                setRedirectPage(`/${splitURL[splitURL.length - 1]}`)
+                setOuterPageNum(outerPageNum + 1)
+                loginState(true)
+            }
+        })
     }
 
     return (

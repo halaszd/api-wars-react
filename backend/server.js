@@ -99,7 +99,7 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 
 app.post('/registration', checkNotAuthenticated, async (req, res) => {
 	try {
-		const hashedPassword = await bcrypt.hash(req.body.password, 10)
+		const hashedPassword = await bcrypt.hash(req.body.password, 10);
         isRegistered = false;
         for(user of users["users"]) {
             if(user.name === req.body.name){

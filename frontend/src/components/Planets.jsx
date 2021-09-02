@@ -198,7 +198,8 @@ const SPlanets = styled(Planets)`
         }
     }
 
-    @media screen and (max-width: 1250px) {
+    // @media screen and (max-width: 1250px) {
+    @media screen and (max-width: 950px) {
         /* padding: 60px;
         margin-left: 15%;
         margin-bottom: 5vh;
